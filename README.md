@@ -1,2 +1,2 @@
 # Color_Correction
-# Author: Naoma Carcamo, Migdonio Gonzalez, Edgar Pardo
+# Authors: Naomi Carcamo, Edgar Pardo, Migdonio Gonzalez
