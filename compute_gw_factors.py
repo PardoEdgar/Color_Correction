@@ -15,6 +15,13 @@ from io import BytesIO
 from PIL import Image
 
 MODEL = None
+inference_transform_pil = transforms.Compose(
+    [
+        transforms.Resize((512, 512)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+    ]
+)
 
 
 def select_input_dir():
@@ -40,16 +47,7 @@ def load_model(
 def initialize_worker(model_path):
     global MODEL
     MODEL = load_model(model_path)
-
-
-inference_transform_pil = transforms.Compose(
-    [
-        transforms.Resize((512, 512)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-    ]
-)
-
+    
 
 def predict_card_type_from_pil(img_pil, model):
     try:
