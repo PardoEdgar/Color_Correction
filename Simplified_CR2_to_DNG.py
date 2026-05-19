@@ -7,7 +7,6 @@ from tkinter import filedialog
 
 DNG_CONVERTER_PATH = r"F:\segmentationDataset\paralelizar_bayer\Adobe\Adobe DNG Converter\Adobe DNG Converter.exe"
 
-
 def select_input_dir():
     root = tk.Tk()
     root.withdraw()
@@ -18,7 +17,6 @@ def select_input_dir():
     if not folder:
         raise SystemExit("No folder was selected.")
     return folder
-
 
 def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
     try:
@@ -44,7 +42,6 @@ def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
         return "ERROR", f"{input_path.name}: Timeout"
     except Exception as e:
         return "ERROR", f"{input_path.name}: {e}"
-
 
 def convert_folder_cr2_to_dng(
     input_dir: Path, output_dir: Path, max_workers: int | None = None
@@ -72,7 +69,6 @@ def convert_folder_cr2_to_dng(
             print(f" {metadata}: {status}")
 
     print(f"DNGs saved in: {output_dir}\n")
-
 
 if __name__ == "__main__":
     cr2_dir = Path(select_input_dir())
