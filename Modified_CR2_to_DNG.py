@@ -3,9 +3,9 @@ import os
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 
-DNG_CONVERTER_PATH = r"F:\segmentationDataset\paralelizar_bayer\Adobe\Adobe DNG Converter\Adobe DNG Converter.exe"  # DNG_CONVERTER_PATH = r"C:\Program Files\Adobe\Adobe DNG Converter\Adobe DNG Converter.exe"
+DNG_CONVERTER_PATH = r"F:\segmentationDataset\paralelizar_bayer\Adobe\Adobe DNG Converter\Adobe DNG Converter.exe"
 
 
 def select_input_dir():
@@ -18,17 +18,6 @@ def select_input_dir():
     if not folder:
         raise SystemExit("No folder was selected.")
     return folder
-
-
-def ask_overwrite(dng_dir: Path, existing: list[Path]) -> bool:
-    root = tk.Tk()
-    root.withdraw()
-    answer = messagebox.askyesno(
-        title="DNGs already exist",
-        message=(f"{len(existing)} DNGs were found in:\n{dng_dir}\n\noverwrite?"),
-    )
-    root.destroy()
-    return answer
 
 
 def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
@@ -66,23 +55,6 @@ def convert_folder_cr2_to_dng(
     if not cr2_files:
         print("CR2 files not found.")
         return
-
-    # Verify existing DNGs and ask overwrite
-    existing_dngs = [
-        output_dir / (p.stem + ".dng")
-        for p in cr2_files
-        if (output_dir / (p.stem + ".dng")).exists()
-    ]
-    if existing_dngs:
-        overwrite = ask_overwrite(output_dir, existing_dngs)
-        if not overwrite:
-            cr2_files = [
-                p for p in cr2_files if not (output_dir / (p.stem + ".dng")).exists()
-            ]
-            print(f"  Skipping {len(existing_dngs)} existing DNGs.")
-            if not cr2_files:
-                print(f" Nothing to convert in: {input_dir}")
-                return
 
     if max_workers is None:
         max_workers = max(1, os.cpu_count() - 1)
