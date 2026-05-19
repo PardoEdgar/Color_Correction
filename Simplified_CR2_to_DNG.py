@@ -11,7 +11,7 @@ def select_input_dir():
     root = tk.Tk()
     root.withdraw()
     folder = filedialog.askdirectory(
-        title="Select folder with CR2 images to convert  (Press Cancel when finished)"
+        title="Select folder with CR2 images to convert"
     )
     root.destroy()
     if not folder:
