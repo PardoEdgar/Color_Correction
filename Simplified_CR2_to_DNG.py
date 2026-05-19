@@ -5,6 +5,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import tkinter as tk
 from tkinter import filedialog
 
+#Path for DNG converter app
 DNG_CONVERTER_PATH = r"F:\segmentationDataset\paralelizar_bayer\Adobe\Adobe DNG Converter\Adobe DNG Converter.exe"
 
 def select_input_dir():
@@ -20,6 +21,7 @@ def select_input_dir():
 
 def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
     try:
+        #Use the terminal for conversion
         cmd = [
             DNG_CONVERTER_PATH,
             # "-u", # Uncompressed disabled to save space
