@@ -21,7 +21,6 @@ def select_input_dir():
 
 def process_raw_image(input_path):
     try:
-        # Classification with preview
         with rawpy.imread(str(input_path)) as img_raw:
             # Date (EXIF)
             Date = "N/A"
