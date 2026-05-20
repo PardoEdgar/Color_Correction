@@ -118,11 +118,11 @@ def process_folder_parallel(
     all_metadata = []
     raw_files = list(input_dir.glob("*.DNG"))
     if not raw_files:
-        print("No se encontraron archivos DNG.")
+        print("DNG files not found.")
         return
 
     if max_workers is None:
-        max_workers = max(1, os.cpu_count() - 1)
+        max_workers = max(1, os.cpu_count() - 4)
 
     print(f"Calculate WB factors from {len(raw_files)} |  Workers: {max_workers}\n")
 
