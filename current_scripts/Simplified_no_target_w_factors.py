@@ -83,7 +83,7 @@ def process_raw_image(input_path):
 
             metadata = {
                 "file_name": input_path.name,
-                "Date": Date,
+                "Date_time": Date,
                 "rgb_avg_R": round(float(rgb_avg[0]), 20),
                 "rgb_avg_G": round(float(rgb_avg[1]),  20),
                 "rgb_avg_B": round(float(rgb_avg[2]),  20),
@@ -101,7 +101,7 @@ def process_raw_image(input_path):
         )  # ← cambia esta línea
         return "ERROR", {
             "file_name": input_path.name,
-            "Date": "N/A",
+            "Date_time": "N/A",
             "rgb_avg_R": None,
             "rgb_avg_G": None,
             "rgb_avg_B": None,
