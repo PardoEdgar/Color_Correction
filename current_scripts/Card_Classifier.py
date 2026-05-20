@@ -34,7 +34,7 @@ def select_output_csv():
     root.destroy()
     if not csv_data:
         raise SystemExit("No csv was selected.")
-    return csv_data
+    return Path(csv_data)
 
 
 def load_model(
@@ -68,9 +68,9 @@ def predict_card_type_from_pil(img_pil, model):
         with torch.no_grad():
             outputs = model(img_tensor)
             pred = torch.argmax(outputs, dim=1).item()
-        return "target" if pred == 1 else "no target"
+        return "Card" if pred == 1 else "No Card"
     except Exception:
-        return "no target"
+        return "No Card"
 
 
 def process_raw_image(input_path):
@@ -97,7 +97,7 @@ def process_raw_image(input_path):
             f"[DETALLE ERROR] {input_path.name}: {type(e).__name__}: {e}"
         )  # ← cambia esta línea
         return "ERROR", {
-            "card_type": "no target",
+            "card_type": "No Card",
         }
 
 
