@@ -1,3 +1,6 @@
+import torch
+from torchvision import models
+import torch.nn as nn
 import rawpy
 import numpy as np
 import exifread
@@ -21,7 +24,22 @@ def select_input_dir():
     root.destroy()
     if not folder:
         raise SystemExit("No folder was selected.")
-    return Path(folder)  # Script aparte load_model()
+    return Path(folder)
+
+
+def load_model(
+    model_path="F:/segmentationDataset/paralelizar_bayer/DNG/card_classifier_4.pth",
+):
+    model = models.resnet50(weights=None)
+    model.fc = nn.Linear(model.fc.in_features, 2)  # Classification with 2 classes
+    model.load_state_dict(torch.load(model_path, map_location="cpu"))
+    model.eval()  # Only prediction
+    return model
+
+
+def initialize_worker(model_path):
+    global MODEL
+    MODEL = load_model(model_path)
 
 
 inference_transform_pil = transforms.Compose(
@@ -99,7 +117,6 @@ def process_raw_image(input_path):
             # Grey world WB factors
             rgb_avg = img.mean(axis=(0, 1))
             white_balance_factors = rgb_avg[1] / rgb_avg
-
             img = img * white_balance_factors
             img = np.clip(img, 0, 1)
 
@@ -113,20 +130,14 @@ def process_raw_image(input_path):
 
             # Contrast stretching.
             low_val = np.percentile(img, 2)
-            high_val = np.percentile(
-                img, 98
-            )  # Hasta aquí se guardan características colorimétricas en .csv
-            # High value luego de white_balance_factors, gamma correction
-
+            high_val = np.percentile(img, 98)
             img = np.clip(img, low_val, high_val)
             img = (img - low_val) / (high_val - low_val)
 
             metadata = {
                 "file_name": input_path.name,
                 "Date": Date,
-                "rgb_avg_R": round(
-                    float(rgb_avg[0]), 6
-                ),  # Todos decimales si no hay problemas...
+                "rgb_avg_R": round(float(rgb_avg[0]), 6),
                 "rgb_avg_G": round(float(rgb_avg[1]), 6),
                 "rgb_avg_B": round(float(rgb_avg[2]), 6),
                 "wbfactor_R": round(float(white_balance_factors[0]), 6),
@@ -161,10 +172,9 @@ def process_folder_parallel(
     max_workers: int | None = None,
 ):
     all_metadata = []
-    raw_files = list(input_dir.glob("*.dng")) + list(input_dir.glob("*.DNG"))
-
+    raw_files = list(input_dir.glob("*.DNG"))
     if not raw_files:
-        print("DNG files not found")
+        print("No se encontraron archivos DNG.")
         return
 
     if max_workers is None:
@@ -203,4 +213,5 @@ def process_folder_parallel(
 if __name__ == "__main__":
     input_dir = select_input_dir()
     print(f"Selected directory: {input_dir}")
-    process_folder_parallel(input_dir=input_dir, max_workers=os.cpu_count() - 1)
+    process_folder_parallel(input_dir=input_dir, max_workers=os.cpu_count() -1)
+
