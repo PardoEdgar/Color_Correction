@@ -24,7 +24,6 @@ def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
         # Use the terminal for conversion
         cmd = [
             DNG_CONVERTER_PATH,
-            "c",
             "-p2",  # The preview is smaller  (p2 is a full size Preview)
             "-d",
             str(output_dir),  # Output directory
