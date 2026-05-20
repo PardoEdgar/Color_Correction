@@ -31,6 +31,7 @@ def process_raw_image(input_path):
                     )
                     if "EXIF DateTimeOriginal" in tags:
                         Date = str(tags["EXIF DateTimeOriginal"])
+                        Date = Date.replace(":", "-", 2)
             except Exception:
                 pass
 
