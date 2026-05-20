@@ -83,12 +83,12 @@ def process_raw_image(input_path):
             metadata = {
                 "file_name": input_path.name,
                 "Date": Date,
-                "rgb_avg_R": round(float(rgb_avg[0]), 6),
-                "rgb_avg_G": round(float(rgb_avg[1]), 6),
-                "rgb_avg_B": round(float(rgb_avg[2]), 6),
-                "wbfactor_R": round(float(white_balance_factors[0]), 6),
-                "wbfactor_G": round(float(white_balance_factors[1]), 6),
-                "wbfactor_B": round(float(white_balance_factors[2]), 6),
+                "rgb_avg_R": round(float(rgb_avg[0]), 20),
+                "rgb_avg_G": round(float(rgb_avg[1]),  20),
+                "rgb_avg_B": round(float(rgb_avg[2]),  20),
+                "wbfactor_R": round(float(white_balance_factors[0]),  20),
+                "wbfactor_G": round(float(white_balance_factors[1]),  20),
+                "wbfactor_B": round(float(white_balance_factors[2]),  20),
                 "high_val": float(high_val),
             }
 
@@ -153,4 +153,4 @@ def process_folder_parallel(
 if __name__ == "__main__":
     input_dir = select_input_dir()
     print(f"Selected directory: {input_dir}")
-    process_folder_parallel(input_dir=input_dir, max_workers=os.cpu_count() - 1)
+    process_folder_parallel(input_dir=input_dir, max_workers=os.cpu_count() - 3)
