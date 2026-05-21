@@ -68,9 +68,9 @@ def predict_card_type_from_pil(img_pil, model):
         with torch.no_grad():
             outputs = model(img_tensor)
             pred = torch.argmax(outputs, dim=1).item()
-        return "Card" if pred == 1 else "No Card"
+        return "target" if pred == 1 else "no target"
     except Exception:
-        return "No Card"
+        return "no target"
 
 
 def process_raw_image(input_path):
