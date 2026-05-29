@@ -5,6 +5,7 @@ import pandas as pd
 import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
+import subprocess
 
 
 def select_folder():
@@ -15,12 +16,29 @@ def select_folder():
     return Path(folder)
 
 
+def get_cfa_data(filepath: Path):
+    result = subprocess.run(
+        [
+            r"C:\Users\jandr\Downloads\exiftool-13.59_64\exiftool-13.59_64\exiftool.exe",
+            "-PhotometricInterpretation",
+            "-CFARepeatPatternDim",
+            "-CFAPattern2",
+            str(filepath),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    return result.stdout.strip()
+
+
 def read_data(filepath: Path):
     result = {"file_name": filepath.name}
     with open(filepath, "rb") as dng_file:
         data = exifread.process_file(dng_file, details=True)
     for tag, value in sorted(data.items()):
         result[tag] = str(value)
+        result["CFA_data"] = get_cfa_data(filepath)
     return result
 
 
@@ -38,7 +56,7 @@ def run_process(dng_file):
 
 def export_metadata(all_exifdata, outputdir):
     outputdir.mkdir(parents=True, exist_ok=True)
-    exifpath = outputdir, "csvexifdata.csv")
+    exifpath = outputdir / "csvexifdata.csv"
     csvexifdata = pd.DataFrame(all_exifdata)
     csvexifdata.to_csv(exifpath, index=False)
 
