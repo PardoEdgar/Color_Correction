@@ -27,7 +27,7 @@ def get_cfa_data(filepath: Path):
             "-ColorMatrix1",
             "-ColorMatrix2",
             "-ProfileConnectionSpace",
-        "    -ColorSpaceData",
+            "-ColorSpaceData",
             "-AsShotNeutral",
             "-PhotometricInterpretation",
             "-CFARepeatPatternDim",
