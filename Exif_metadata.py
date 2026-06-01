@@ -1,3 +1,4 @@
+import rawpy
 from tkinter import filedialog
 import exifread
 import tkinter as tk
@@ -38,7 +39,27 @@ def read_data(filepath: Path):
         data = exifread.process_file(dng_file, details=True)
     for tag, value in sorted(data.items()):
         result[tag] = str(value)
-        result["CFA_data"] = get_cfa_data(filepath)
+    result["CFA_data"] = get_cfa_data(filepath)
+
+    with rawpy.imread(str(filepath)) as raw:  # FIX: rawpy.imread needs string path
+        result["camera_whitebalance"] = str(raw.camera_whitebalance)
+        result["daylight_whitebalance"] = str(raw.daylight_whitebalance)
+        result["num_colors"] = raw.num_colors
+        result["color_desc"] = (
+            raw.color_desc.decode("utf-8")
+            if isinstance(raw.color_desc, bytes)
+            else str(raw.color_desc)
+        )
+        result["raw_height"] = raw.sizes.raw_height
+        result["raw_width"] = raw.sizes.raw_width
+        result["image_height"] = raw.sizes.height
+        result["image_width"] = raw.sizes.width
+        result["black_level_per_channel"] = str(raw.black_level_per_channel)
+        result["white_level"] = raw.white_level
+        result["color_matrix"] = str(raw.color_matrix)
+        result["raw_pattern:"] = raw.raw_pattern
+        result["raw_pattern:"] = raw.raw_pattern
+
     return result
 
 
