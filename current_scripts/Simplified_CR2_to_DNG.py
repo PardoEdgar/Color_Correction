@@ -25,7 +25,7 @@ def convert_cr2_to_dng(input_path: Path, output_dir: Path) -> tuple[str, str]:
         cmd = [
             DNG_CONVERTER_PATH,
             # "-u", # Uncompressed disabled to save space
-            "-l",  # Linear (Wihout color transformation)
+            #"-l",  # Linear (Wihout color transformation)
             "-p1",  # The preview is smaller  (p2 is a full size Preview)
             "-d",
             str(output_dir),  # Output directory
