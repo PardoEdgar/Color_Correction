@@ -1,3 +1,4 @@
+#Edgar Alejandro Pardo-Sarmiento
 import rawpy
 from tkinter import filedialog
 import exifread
