@@ -56,9 +56,8 @@ def read_data(filepath: Path):
         result["image_width"] = raw.sizes.width
         result["black_level_per_channel"] = str(raw.black_level_per_channel)
         result["white_level"] = raw.white_level
-        result["color_matrix"] = str(raw.color_matrix)
-        result["raw_pattern:"] = raw.raw_pattern
-        result["raw_pattern:"] = raw.raw_pattern
+        result["color_matrix"] = str(raw.color_matrix.tolist())
+        result["raw_pattern"] = raw.raw_pattern
 
     return result
 
