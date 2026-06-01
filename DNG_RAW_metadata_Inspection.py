@@ -22,6 +22,13 @@ def get_cfa_data(filepath: Path):
     result = subprocess.run(
         [
             r"C:\Users\jandr\Downloads\exiftool-13.59_64\exiftool-13.59_64\exiftool.exe",
+            "-CalibrationIlluminant1",
+            "-CalibrationIlluminant2", 
+            "-ColorMatrix1",
+            "-ColorMatrix2",
+            "-ProfileConnectionSpace",
+        "    -ColorSpaceData",
+            "-AsShotNeutral",
             "-PhotometricInterpretation",
             "-CFARepeatPatternDim",
             "-CFAPattern2",
