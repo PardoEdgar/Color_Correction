@@ -23,40 +23,46 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
     for demosaickings in available_Demos:
         img_raw = rawpy.imread(str(file))
 
-        img_FBDD = img_raw.postprocess(
-            output_color=rawpy.ColorSpace.sRGB,
-            output_bps=16,
-            no_auto_bright=True,
-            demosaic_algorithm=demosaickings,
-            fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Full,
-            highlight_mode=rawpy.HighlightMode.Ignore,
-            adjust_maximum_thr=0,
-            use_camera_wb=False,
-            use_auto_wb=False,
-            user_wb=[1.0, 1.0, 1.0, 1.0],
-            user_black=0,
-            user_sat=(2**16 - 1),
-            gamma=(1.0, 1.0),
-        ).astype(np.float64)
+        img_FBDD = (
+            img_raw.postprocess(
+                output_color=rawpy.ColorSpace.sRGB,
+                output_bps=16,
+                no_auto_bright=True,
+                demosaic_algorithm=demosaickings,
+                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Full,
+                highlight_mode=rawpy.HighlightMode.Ignore,
+                adjust_maximum_thr=0,
+                use_camera_wb=False,
+                use_auto_wb=False,
+                user_wb=[1.0, 1.0, 1.0, 1.0],
+                user_black=0,
+                user_sat=(2**16 - 1),
+                gamma=(1.0, 1.0),
+            ).astype(np.float64)
+            / 65535.0
+        )
 
         img_FBDD = np.power(img_FBDD, 1.0 / 2.2)
         img_FBDD = np.clip(img_FBDD, 0, 1)
 
-        img_non_FBDD = img_raw.postprocess(
-            output_color=rawpy.ColorSpace.sRGB,
-            output_bps=16,
-            no_auto_bright=True,
-            demosaic_algorithm=demosaickings,
-            fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Off,
-            highlight_mode=rawpy.HighlightMode.Ignore,
-            adjust_maximum_thr=0,
-            use_camera_wb=False,
-            use_auto_wb=False,
-            user_wb=[1.0, 1.0, 1.0, 1.0],
-            user_black=0,
-            user_sat=(2**16 - 1),
-            gamma=(1.0, 1.0),
-        ).astype(np.float64)
+        img_non_FBDD = (
+            img_raw.postprocess(
+                output_color=rawpy.ColorSpace.sRGB,
+                output_bps=16,
+                no_auto_bright=True,
+                demosaic_algorithm=demosaickings,
+                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Off,
+                highlight_mode=rawpy.HighlightMode.Ignore,
+                adjust_maximum_thr=0,
+                use_camera_wb=False,
+                use_auto_wb=False,
+                user_wb=[1.0, 1.0, 1.0, 1.0],
+                user_black=0,
+                user_sat=(2**16 - 1),
+                gamma=(1.0, 1.0),
+            ).astype(np.float64)
+            / 65535.0
+        )
 
         img_non_FBDD = np.power(img_non_FBDD, 1.0 / 2.2)
         img_non_FBDD = np.clip(img_non_FBDD, 0, 1)
@@ -66,7 +72,7 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
 
         img_raw.close()
 
-        demosaicking_name = demosaicking.name
+        demosaicking_name = demosaickings.name
         tiff_fbdd_path = output_dir_fbdd_tiff / (
             f"{file.stem}{demosaicking_name}fbdd.tiff"
         )
