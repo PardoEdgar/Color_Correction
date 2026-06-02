@@ -32,9 +32,9 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
                 fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Full,
                 highlight_mode=rawpy.HighlightMode.Ignore,
                 adjust_maximum_thr=0,
-                use_camera_wb=False,
-                use_auto_wb=False,
-                user_wb=[1.0, 1.0, 1.0, 1.0],
+                use_camera_wb=True,
+                use_auto_wb=True,
+                #user_wb=[1.0, 1.0, 1.0, 1.0],
                 user_black=0,
                 user_sat=(2**16 - 1),
                 gamma=(1.0, 1.0),
@@ -54,9 +54,9 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
                 fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Off,
                 highlight_mode=rawpy.HighlightMode.Ignore,
                 adjust_maximum_thr=0,
-                use_camera_wb=False,
-                use_auto_wb=False,
-                user_wb=[1.0, 1.0, 1.0, 1.0],
+                use_camera_wb=True,
+                use_auto_wb= True,
+                #user_wb=[1.0, 1.0, 1.0, 1.0],
                 user_black=0,
                 user_sat=(2**16 - 1),
                 gamma=(1.0, 1.0),
@@ -91,8 +91,8 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
 
 def process_folder_parallel(input_dir: Path, max_workers: int | None = None):
 
-    output_dir_fbdd_tiff = input_dir.parent / f"Tiff_gamma"
-    output_dir_nofbdd_tiff = input_dir.parent / f"TIFF_non_gamma"
+    output_dir_fbdd_tiff = input_dir.parent / f"fbdd"
+    output_dir_nofbdd_tiff = input_dir.parent / f"non_fbdd"
 
     output_dir_fbdd_tiff.mkdir(parents=True, exist_ok=True)
     output_dir_nofbdd_tiff.mkdir(parents=True, exist_ok=True)
