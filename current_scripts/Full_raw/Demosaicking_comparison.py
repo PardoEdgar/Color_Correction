@@ -20,9 +20,10 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
     available_Demos = list(rawpy.DemosaicAlgorithm)
     results_FBDD = {}
     results_non_FBDD = {}
+    img_raw = rawpy.imread(str(file))
+    white_level = img_raw.white_level
+    black_level = np.array(img_raw.black_level_per_channel[:3], dtype=np.float64)
     for demosaickings in available_Demos:
-        img_raw = rawpy.imread(str(file))
-
         img_FBDD = (
             img_raw.postprocess(
                 output_color=rawpy.ColorSpace.sRGB,
@@ -34,13 +35,16 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
                 adjust_maximum_thr=0,
                 use_camera_wb=True,
                 use_auto_wb=True,
-                #user_wb=[1.0, 1.0, 1.0, 1.0],
+                # user_wb=[1.0, 1.0, 1.0, 1.0],
                 user_black=0,
                 user_sat=(2**16 - 1),
                 gamma=(1.0, 1.0),
             ).astype(np.float64)
             / 65535.0
         )
+
+        img_FBDD = (img_FBDD - black_level) / (white_level - black_level)
+        img_FBDD = np.clip(img_FBDD, 0, 1)
 
         img_FBDD = np.power(img_FBDD, 1.0 / 2.2)
         img_FBDD = np.clip(img_FBDD, 0, 1)
@@ -55,14 +59,17 @@ def demosaicking(file, output_dir_fbdd_tiff, output_dir_nofbdd_tiff):
                 highlight_mode=rawpy.HighlightMode.Ignore,
                 adjust_maximum_thr=0,
                 use_camera_wb=True,
-                use_auto_wb= True,
-                #user_wb=[1.0, 1.0, 1.0, 1.0],
+                use_auto_wb=True,
+                # user_wb=[1.0, 1.0, 1.0, 1.0],
                 user_black=0,
                 user_sat=(2**16 - 1),
                 gamma=(1.0, 1.0),
             ).astype(np.float64)
             / 65535.0
         )
+
+        img_non_FBDD = (img_non_FBDD - black_level) / (white_level - black_level)
+        img_non_FBDD = np.clip(img_non_FBDD, 0, 1)
 
         img_non_FBDD = np.power(img_non_FBDD, 1.0 / 2.2)
         img_non_FBDD = np.clip(img_non_FBDD, 0, 1)
