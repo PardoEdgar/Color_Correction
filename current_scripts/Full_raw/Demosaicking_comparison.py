@@ -1,4 +1,5 @@
 # Demosaicking comparison
+# Comparison between diffirent domasicking algoraithms available in RawPy and between using and non-using FBBD denoising.
 import rawpy
 from tkinter import filedialog
 import numpy as np
