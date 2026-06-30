@@ -17,33 +17,22 @@ def load_data():
 
 
 def demosaicking(file, output_dir_tiff):
-    img_raw = rawpy.imread(str(file))
-    img = img_raw.raw_image_visible.astype(np.float32)
-    white = img_raw.white_level
-    black = img_raw.black_level_per_channel
-    # R
-    img[0::2, 0::2] = (img[0::2, 0::2] - black[0]) / (white - black[0])
-    # G1
-    img[0::2, 1::2] = (img[0::2, 1::2] - black[1]) / (white - black[1])
-    # G2
-    img[1::2, 0::2] = (img[1::2, 0::2] - black[3]) / (white - black[3])
-    # B
-    img[1::2, 1::2] = (img[1::2, 1::2] - black[2]) / (white - black[2])
+    img_raw = rawpy.imread(str(file))    
     img = (
             img_raw.postprocess(
                 output_bps=16,
                 #no_auto_bright=False,
                 #auto_bright_thr=10,
-                four_color_rgb = False, #Establece independencia entre los canales G del RGGB
+                four_color_rgb = True, #Establece independencia entre los canales G del RGGB
                 demosaic_algorithm=rawpy.DemosaicAlgorithm.AHD,
                 output_color=rawpy.ColorSpace.sRGB,
-                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Off,
-                highlight_mode=rawpy.HighlightMode.Ignore,
-                use_camera_wb=False, #Usa el balance de blancos que la camara guarda en RAW
+                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Full,
+                highlight_mode=rawpy.HighlightMode.Clip,
+                #use_camera_wb=True, #Usa el balance de blancos que la camara guarda en RAW
                 use_auto_wb=True, #Calculo de multiplicadores con rawpy
                 #user_wb=[1.0, 1.0, 1.0, 1.0],
                 #user_black=1,
-                bright = 2,
+                #bright = 1,
                 no_auto_scale = False, #Usa un escalado automatico
                 gamma=(2.22, 4.5),  
                 #user_sat=(2**16 - 1),
