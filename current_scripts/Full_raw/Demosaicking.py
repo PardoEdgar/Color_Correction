@@ -26,10 +26,10 @@ def demosaicking(file, output_dir_tiff):
                 four_color_rgb = True, #Establece independencia entre los canales G del RGGB
                 demosaic_algorithm=rawpy.DemosaicAlgorithm.AHD,
                 output_color=rawpy.ColorSpace.sRGB,
-                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Full,
+                fbdd_noise_reduction=rawpy.FBDDNoiseReductionMode.Off,
                 highlight_mode=rawpy.HighlightMode.Clip,
                 #use_camera_wb=True, #Usa el balance de blancos que la camara guarda en RAW
-                use_auto_wb=True, #Calculo de multiplicadores con rawpy
+                use_auto_wb=True, #Calculo de multiplicadores de white balanceing con rawpy
                 #user_wb=[1.0, 1.0, 1.0, 1.0],
                 #user_black=1,
                 #bright = 1,
@@ -40,10 +40,16 @@ def demosaicking(file, output_dir_tiff):
         
         )
 
+    low_val = np.percentile(img, 1)
+    high_val = np.percentile(img, 98)
+    img = np.clip(img, low_val, high_val)
+    img = (img - low_val) / (high_val - low_val)    
+
+
     tiff_path = output_dir_tiff / (
             f"{file.stem}.tiff"
         )
-    tifffile.imwrite(str(tiff_path), (img).astype(np.uint16))
+    tifffile.imwrite(str(tiff_path), (img * 65535).astype(np.uint16))
 
     img_raw.close()
 
